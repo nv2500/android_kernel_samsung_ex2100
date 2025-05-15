@@ -5911,13 +5911,13 @@ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		break;
     }
     // [ @SystemFW
-    case BINDER_SET_SYSTEM_SERVER_PID: {
-        if (copy_from_user(&system_server_pid, ubuf, sizeof(system_server_pid))) {
-            ret = -EINVAL;
-            goto err;
-        }
-        break;
-    }
+    // case BINDER_SET_SYSTEM_SERVER_PID: {
+    //     if (copy_from_user(&system_server_pid, ubuf, sizeof(system_server_pid))) {
+    //         ret = -EINVAL;
+    //         goto err;
+    //     }
+    //     break;
+    // }
     // ] @SystemFW
 
     // ++ Google Freezer

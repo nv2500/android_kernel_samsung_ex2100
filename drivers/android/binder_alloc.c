@@ -463,6 +463,7 @@ static struct binder_buffer *binder_alloc_new_buf_locked(
     if (MAX_ASYNC_ALLOCATION_SIZE <= size + sizeof(struct binder_buffer) && is_async) { //512K
         pr_info("%d: binder_alloc_buf size %zd(%zd) failed, too large async size\n",
                 alloc->pid, size, alloc->free_async_space);
+	}
 	/* Pad 0-size buffers so they get assigned unique addresses */
 	size = max(size, sizeof(void *));
 
@@ -574,19 +575,7 @@ static struct binder_buffer *binder_alloc_new_buf_locked(
 	buffer->pid = pid;
 	buffer->oneway_spam_suspect = false;
 	if (is_async) {
-<<<<<<< HEAD
-		alloc->free_async_space -= size + sizeof(struct binder_buffer);
-        if ((system_server_pid == alloc->pid) && (alloc->free_async_space <= 153600)) { // 150K
-            pr_info("%d: [free_size<150K] binder_alloc_buf size %zd async free %zd\n",
-                    alloc->pid, size, alloc->free_async_space);
-        }
-        if ((system_server_pid == alloc->pid) && (size >= 122880)) { // 120K
-            pr_info("%d: [alloc_size>120K] binder_alloc_buf size %zd async free %zd\n",
-                    alloc->pid, size, alloc->free_async_space);
-        }
-=======
 		alloc->free_async_space -= size;
->>>>>>> 74299cb130a31e81508f1d37c41f9c880997718a
 		binder_alloc_debug(BINDER_DEBUG_BUFFER_ALLOC_ASYNC,
 			     "%d: binder_alloc_buf size %zd async free %zd\n",
 			      alloc->pid, size, alloc->free_async_space);

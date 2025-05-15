@@ -253,8 +253,12 @@ out:
 	if (v->mode == DM_VERITY_MODE_LOGGING)
 		return 0;
 
-	if (v->mode == DM_VERITY_MODE_RESTART)
+	if (v->mode == DM_VERITY_MODE_RESTART) {
+#ifdef CONFIG_DM_VERITY_AVB
+		dm_verity_avb_error_handler();
+#endif
 		kernel_restart("dm-verity device corrupted");
+	}
 
 	return 1;
 }
@@ -548,6 +552,7 @@ static int verity_verify_io(struct dm_verity_io *io)
 			add_fc_blks_entry(cur_block,v->data_dev->name);
 #endif
 			continue;
+		}
 		else {
 			if (bio->bi_status) {
 				/*
@@ -555,9 +560,16 @@ static int verity_verify_io(struct dm_verity_io *io)
 				 */
 				return -EIO;
 			}
+#ifdef SEC_HEX_DEBUG
+			if (verity_handle_err_hex_debug(v, DM_VERITY_BLOCK_TYPE_DATA,
+					cur_block, io, &start)) {
+				add_corrupted_blks();
+#else
 			if (verity_handle_err(v, DM_VERITY_BLOCK_TYPE_DATA,
-					      cur_block))
+					cur_block)) {
+#endif
 				return -EIO;
+			}
 		}
 	}
 

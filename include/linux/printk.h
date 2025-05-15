@@ -581,3 +581,7 @@ static inline void printk_deferred_exit(void)
 {
 }
 #endif
+
+typedef void (*hook_func_t)(const char *buf, size_t size, unsigned int id);
+extern void register_hook_logbuf(hook_func_t func);
+#endif

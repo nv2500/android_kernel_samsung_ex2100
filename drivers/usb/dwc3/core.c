@@ -1849,10 +1849,13 @@ err2:
 	pm_runtime_disable(dev);
 	pm_runtime_set_suspended(dev);
 	pm_runtime_put_noidle(dev);
+
+#if 0
 disable_clks:
 	clk_bulk_disable_unprepare(dwc->num_clks, dwc->clks);
 assert_reset:
 	reset_control_assert(dwc->reset);
+#endif
 
 	/* Disable LDO */
 	//exynos_usbdrd_phy_conn(dwc->usb2_generic_phy, 0);
@@ -1883,6 +1886,7 @@ static int dwc3_remove(struct platform_device *pdev)
 
 	return 0;
 }
+#endif
 
 #ifdef CONFIG_PM
 static int dwc3_core_init_for_resume(struct dwc3 *dwc)
